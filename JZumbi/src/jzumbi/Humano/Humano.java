@@ -14,11 +14,6 @@ abstract class Humano {
             this.strength = 200;
     }
     
-    public Humano(final Humano h1){
-        this.vida = h1.vida;
-        this.strength = h1.strength;
-    }
-    
     abstract void incrementarVida(int valor);
     
     protected int vida, strength;

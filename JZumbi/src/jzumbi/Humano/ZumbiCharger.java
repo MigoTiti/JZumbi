@@ -4,26 +4,26 @@ import java.util.Random;
 import javax.swing.JOptionPane;
 import jzumbi.Clear;
 
-public class ZumbiHunter extends Zumbi{
+public class ZumbiCharger extends Zumbi {
     
-    public ZumbiHunter(){
+    public ZumbiCharger(){
         super("Sem nome",2000,200);
-        this.velocidade = 2;
+        this.stamina = 2;
     }
     
-    public ZumbiHunter(final String nome, int vida, int strength){
+    public ZumbiCharger(final String nome, int vida, int strength){
         super(nome,vida,strength);
-        this.velocidade = 2;
+        this.stamina = 2;
     }
     
-    public ZumbiHunter(final ZumbiHunter z1){
+    public ZumbiCharger(final ZumbiHunter z1){
         super(z1.nome,z1.vida,z1.strength);
-        this.velocidade = z1.velocidade;
+        this.stamina = z1.velocidade;
     }
     
     @Override
     public int atacarHumano(boolean chefe, int vidaC, int strengthC){
-        int vidaH = 4000, vidaZ = this.vida, strengthH = 200, strengthZ = this.strength, maisMenos, atk, total;
+        int staminaZ = this.stamina, vidaH = 4000, vidaZ = this.vida, strengthH = 200, strengthZ = this.strength, maisMenos, atk, total;
         String opt;
         String nomeH;
         Random gerador = new Random();
@@ -39,7 +39,7 @@ public class ZumbiHunter extends Zumbi{
             Clear.clear();
             System.out.println("HP " + nomeH + ": " + vidaH + "    "
             + "HP " + nome + ": " + vidaZ);
-            opt = JOptionPane.showInputDialog("\n1- Ataque normal;\n2- Mordida (custa pontos de vida);\n3- Fugir;");
+            opt = JOptionPane.showInputDialog("\n1- Ataque normal;\n2- Ataque carregado (custa stamina);\n3- Fugir;");
             switch(opt){
                 case "1":
                     maisMenos = gerador.nextInt(2);
@@ -55,9 +55,7 @@ public class ZumbiHunter extends Zumbi{
                     JOptionPane.showMessageDialog(null,nome + "usou Ataque normal, causando" + total + " de dano.");
                     break;
                 case "2":
-                    vidaZ = vidaZ - 200;
-                    if(vidaZ < 0)
-                        vidaZ = 0;
+                    staminaZ -= 10;
                     maisMenos = gerador.nextInt(2);
                     atk = gerador.nextInt(201);
                     if(maisMenos==1){
@@ -68,7 +66,7 @@ public class ZumbiHunter extends Zumbi{
                         vidaH = vidaH - total;
                     }
                     Clear.clear();
-                    JOptionPane.showMessageDialog(null,nome + "usou Mordida, causando" + total + " de dano e recebendo 200 de dano colateral.");
+                    JOptionPane.showMessageDialog(null,nome + "usou Ataque carregado, causando" + total + " de dano e gastando 10 de stamina.");
                     break;
                 case "3":
                     Clear.clear();
@@ -108,9 +106,9 @@ public class ZumbiHunter extends Zumbi{
             saida += "\nPossui" + item + ";";
         }
         
-        saida += "\nVelocidade: " + this.velocidade;
+        saida += "\nStamina: " + this.stamina;
         return saida;
     }
     
-    protected int velocidade;
+    protected int stamina;
 }

@@ -2,6 +2,7 @@ package jzumbi.Humano;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import jzumbi.Clear;
 
 abstract class Zumbi extends Humano {
 
@@ -50,32 +51,18 @@ abstract class Zumbi extends Humano {
                 System.out.println("Voce pegou um capacete, +300 de vida.");
                 setC();
                 itemAtual = "capacete";
-                clear();
+                Clear.clear();
                 break;
             case 'A':
                 System.out.println("Voce pegou uma armadura, +500 de vida.");
                 setA();
                 itemAtual = "armadura";
-                clear();
+                Clear.clear();
                 break;
         }
         
         this.numeroItens++;
         this.itens.add(itemAtual);
-    }
-
-    private static void clear() {
-        try {
-            String os = System.getProperty("os.name");
-
-            if (os.contains("Windows")) {
-                Runtime.getRuntime().exec("cls");
-            } else {
-                Runtime.getRuntime().exec("clear");
-            }
-        } catch (IOException e) {
-
-        }
     }
 
     @Override
