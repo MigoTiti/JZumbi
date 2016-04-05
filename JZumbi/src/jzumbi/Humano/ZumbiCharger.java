@@ -16,9 +16,9 @@ public class ZumbiCharger extends Zumbi {
         this.stamina = 2;
     }
     
-    public ZumbiCharger(final ZumbiHunter z1){
+    public ZumbiCharger(final ZumbiCharger z1){
         super(z1.nome,z1.vida,z1.strength);
-        this.stamina = z1.velocidade;
+        this.stamina = z1.stamina;
     }
     
     @Override

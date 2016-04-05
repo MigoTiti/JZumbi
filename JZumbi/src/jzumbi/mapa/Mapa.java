@@ -6,6 +6,8 @@ import javax.swing.JOptionPane;
 import jzumbi.Clear;
 import jzumbi.Data;
 import jzumbi.Humano.Chefe;
+import jzumbi.Humano.ZumbiCharger;
+import jzumbi.Humano.ZumbiHunter;
 
 public class Mapa {
     
@@ -162,10 +164,9 @@ public class Mapa {
 }
     
     public void andarMapa(char d, Integer c){
-	Integer x, y; 
+	Integer x = null, y = null; 
         int cfases=1;
         procurarMapa(x,y);
-        ZumbiHunter* zAux = dynamic_cast<ZumbiHunter*>(Jogador);
 	    
         do{
             Clear.clear();
@@ -175,8 +176,10 @@ public class Mapa {
                 avancarDia();
                 cfases++;
                 iniciarMapa2();
-                if(zAux!=0){
-                    this.jogador.incrementarVida(500);
+                if(jogador instanceof ZumbiHunter){
+                    ZumbiHunter aux = new ZumbiHunter((ZumbiHunter)jogador);
+                    aux.incrementarVida(500);
+                    this.jogador = new ZumbiHunter(aux);
                     Clear.clear();
                     JOptionPane.showMessageDialog(null, "Hunter possui vantagem a noite, +500 de vida.");
                 }
@@ -197,6 +200,306 @@ public class Mapa {
                     d = (char)System.in.read();
                 } catch (IOException ex) {}
         }while(d!='0');
+    }
+    
+    private void procurarMapa(Integer l, Integer c){
+	int i, j;
+	for (i=0;i<=29;i++){
+            for (j=0;j<=29;j++){
+                if(mapa[i][j]=='Z'){
+                    l=i;
+                    c=j;
+                    break;
+                }
+            }
+	}
+    }
+    
+    private void verificarMapa(char d, Integer x, Integer y, Integer l, Integer c, Integer c1){
+	int v;
+	boolean chefe=false; 
+        
+	switch(d){
+		case '1':
+                    if(mapa[x+1][y-1]=='1'){
+                        mapa[x+1][y-1]='Z';
+                        mapa[x][y]='1';
+                        l=x+1;
+                        c=y-1;
+                    }else if(mapa[x+1][y-1]=='H'){
+                        v=jogador.atacarHumano(chefe,chefeFinal.getVida(),chefeFinal.getStrength());
+                        if (v==1){
+                            c1=c1+1;
+                            humanosVivos--;
+                            mapa[x+1][y-1]='Z';
+                            chefeFinal.incrementarVida(100);
+                            chefeFinal.decrementarStrength();
+                        }else if (v==0){
+                            JOptionPane.showMessageDialog(null, "Voce perdeu. Aperte qualquer botao para sair: ");
+                            cin.get();
+                            exit(0);
+                        }
+                    }else if((mapa[x+1][y-1]=='A') || (mapa[x+1][y-1]=='C')){
+                        jogador.pegarItem(mapa[x+1][y-1]);
+                        mapa[x+1][y-1]='1';
+                    }else if (mapa[x+1][y-1]=='B'){
+                        chefe=true;
+                        v=jogador.atacarHumano(chefe,chefeFinal.getVida(),chefeFinal.getStrength());
+                        if (v==1)
+                            mapa[x+1][y-1]='Z';
+                        else if (v==0){
+                            JOptionPane.showMessageDialog(null, "Voce perdeu. Aperte qualquer botao para sair: ");
+                            cin.get();
+                            exit(0);
+                        }								
+                    }
+		    break;
+		case '2':
+		case 's':
+		case 'S':
+			if(mapa[x+1][y]=='1'){
+			    mapa[x+1][y]='Z';
+			    mapa[x][y]='1';
+			    l=x+1;
+			}else if(mapa[x+1][y]=='H'){
+				v=Jogador.atacarHumano(chefe,chefeFinal.getVida(),chefeFinal.getStrength());
+				if (v==1){
+				c1=c1+1;
+                humanosVivos--;
+                chefeFinal.incrementarVida(100);
+                chefeFinal.decrementarStrength();
+			    mapa[x+1][y]='Z';
+			    }else if (v==0){
+			    JOptionPane.showMessageDialog(null, "Voce perdeu. Aperte qualquer botao para sair: ");
+				cin.get();
+			    exit(0);
+                }
+		    }else if((mapa[x+1][y]=='A') || (mapa[x+1][y]=='C')){
+				Jogador->pegarItem(mapa[x+1][y]);
+				mapa[x+1][y]='1';
+			}else if (mapa[x+1][y]=='B'){
+				chefe=true;
+				v=Jogador->atacarHumano(chefe,chefeFinal.getVida(),chefeFinal.getStrength());
+				if (v==1)
+			    mapa[x+1][y-1]='Z';
+				else if (v==0){
+			    JOptionPane.showMessageDialog(null, "Voce perdeu. Aperte qualquer botao para sair: ");
+				cin.get();
+			    exit(0);
+                }								
+			}
+		    break;
+		case '3':
+			if(mapa[x+1][y+1]=='1'){
+			    mapa[x+1][y+1]='Z';
+			    mapa[x][y]='1';
+			    *l=x+1;
+			    *c=y+1;
+			}else if(mapa[x+1][y+1]=='H'){
+				v=Jogador->atacarHumano(chefe,chefeFinal.getVida(),chefeFinal.getStrength());
+				if (v==1){
+				*c1=*c1+1;
+                humanosVivos--;
+                chefeFinal.incrementarVida(100);
+                chefeFinal.decrementarStrength();
+			    mapa[x+1][y+1]='Z';
+			    }else if (v==0){
+			    JOptionPane.showMessageDialog(null, "Voce perdeu. Aperte qualquer botao para sair: ");
+				cin.get();
+			    exit(0);
+                }
+		    }else if((mapa[x+1][y+1]=='A') || (mapa[x+1][y+1]=='C')){
+				Jogador->pegarItem(mapa[x+1][y+1]);
+				mapa[x+1][y+1]='1';
+			}else if (mapa[x+1][y+1]=='B'){
+				chefe=true;
+				v=Jogador->atacarHumano(chefe,chefeFinal.getVida(),chefeFinal.getStrength());
+				if (v==1)
+			    mapa[x+1][y-1]='Z';
+				else if (v==0){
+			    JOptionPane.showMessageDialog(null, "Voce perdeu. Aperte qualquer botao para sair: ");
+				cin.get();
+			    exit(0);
+                }								
+			}
+		    break;
+		case '4':
+		case 'a':
+		case 'A':
+			if(mapa[x][y-1]=='1'){
+			    mapa[x][y-1]='Z';
+			    mapa[x][y]='1';
+			    *c=y-1;
+			}else if(mapa[x][y-1]=='H'){
+				v=Jogador->atacarHumano(chefe,chefeFinal.getVida(),chefeFinal.getStrength());
+				if (v==1){
+				*c1=*c1+1;
+                humanosVivos--;
+                chefeFinal.incrementarVida(100);
+                chefeFinal.decrementarStrength();
+			    mapa[x][y-1]='Z';
+			    }else if (v==0){
+			    cout << "Voce perdeu. Aperte qualquer botao para sair: ";
+				cin.get();
+			    exit(0);
+                }
+		    }else if((mapa[x][y-1]=='A') || (mapa[x][y-1]=='C')){
+				Jogador->pegarItem(mapa[x][y-1]);
+				mapa[x][y-1]='1';
+			}else if (mapa[x][y-1]=='B'){
+				chefe=true;
+				v=Jogador->atacarHumano(chefe,chefeFinal.getVida(),chefeFinal.getStrength());
+				if (v==1)
+			    mapa[x+1][y-1]='Z';
+				else if (v==0){
+			    cout << "Voce perdeu. Aperte qualquer botao para sair: ";
+				cin.get();
+			    exit(0);
+                }								
+			}
+		    break;
+		case '6':
+		case 'd':
+		case 'D':
+			if(mapa[x][y+1]=='1'){
+			    mapa[x][y+1]='Z';
+			    mapa[x][y]='1';
+			    *c=y+1;
+			}else if(mapa[x][y+1]=='H'){
+				v=Jogador->atacarHumano(chefe,chefeFinal.getVida(),chefeFinal.getStrength());
+				if (v==1){
+				*c1=*c1+1;
+                humanosVivos--;
+                chefeFinal.incrementarVida(100);
+                chefeFinal.decrementarStrength();
+			    mapa[x][y+1]='Z';
+			    }else if (v==0){
+			    cout << "Voce perdeu. Aperte qualquer botao para sair: ";
+				cin.get();
+			    exit(0);
+                }
+		    }else if((mapa[x][y+1]=='A') || (mapa[x][y+1]=='C')){
+				Jogador->pegarItem(mapa[x][y+1]);
+				mapa[x][y+1]='1';
+			}else if (mapa[x][y+1]=='B'){
+				chefe=true;
+				v=Jogador->atacarHumano(chefe,chefeFinal.getVida(),chefeFinal.getStrength());
+				if (v==1)
+			    mapa[x+1][y-1]='Z';
+				else if (v==0){
+			    cout << "Voce perdeu. Aperte qualquer botao para sair: ";
+				cin.get();
+			    exit(0);
+                }								
+			}
+		    break;
+		case '7':
+			if(mapa[x-1][y-1]=='1'){
+			    mapa[x-1][y-1]='Z';
+			    mapa[x][y]='1';
+			    *l=x-1;
+			    *c=y-1;
+			}else if(mapa[x-1][y-1]=='H'){
+				v=Jogador->atacarHumano(chefe,chefeFinal.getVida(),chefeFinal.getStrength());
+				if (v==1){
+				*c1=*c1+1;
+                humanosVivos--;
+                chefeFinal.incrementarVida(100);
+                chefeFinal.decrementarStrength();
+			    mapa[x-1][y-1]='Z';
+			    }else if (v==0){
+			    cout << "Voce perdeu. Aperte qualquer botao para sair: ";
+				cin.get();
+			    exit(0);
+                }
+		    }else if((mapa[x-1][y-1]=='A') || (mapa[x-1][y-1]=='C')){
+				Jogador->pegarItem(mapa[x-1][y-1]);
+				mapa[x-1][y-1]='1';
+			}else if (mapa[x-1][y-1]=='B'){
+				chefe=true;
+				v=Jogador->atacarHumano(chefe,chefeFinal.getVida(),chefeFinal.getStrength());
+				if (v==1)
+			    mapa[x+1][y-1]='Z';
+				else if (v==0){
+			    cout << "Voce perdeu. Aperte qualquer botao para sair: ";
+				cin.get();
+			    exit(0);
+                }								
+			}
+		    break;
+		case '8':
+		case 'w':
+		case 'W':
+			if(mapa[x-1][y]=='1'){
+			    mapa[x-1][y]='Z';
+			    mapa[x][y]='1';
+			    *l=x-1;
+			}else if(mapa[x-1][y]=='H'){
+				v=Jogador->atacarHumano(chefe,chefeFinal.getVida(),chefeFinal.getStrength());
+				if (v==1){
+				*c1=*c1+1;
+                humanosVivos--;
+                chefeFinal.incrementarVida(100);
+                chefeFinal.decrementarStrength();
+			    mapa[x-1][y]='Z';
+			    }else if (v==0){
+			    cout << "Voce perdeu. Aperte qualquer botao para sair: ";
+				cin.get();
+			    exit(0);
+                }
+		    }else if((mapa[x-1][y]=='A') || (mapa[x-1][y]=='C')){
+				Jogador->pegarItem(mapa[x-1][y]);
+                mapa[x-1][y]='1';
+			}else if (mapa[x-1][y]=='B'){
+				chefe=true;
+				v=Jogador->atacarHumano(chefe,chefeFinal.getVida(),chefeFinal.getStrength());
+				if (v==1)
+			    mapa[x+1][y-1]='Z';
+				else if (v==0){
+			    cout << "Voce perdeu. Aperte qualquer botao para sair: ";
+				cin.get();
+			    exit(0);
+                }								
+			}
+		    break;
+		case '9':
+			if(mapa[x-1][y+1]=='1'){
+			    mapa[x-1][y+1]='Z';
+			    mapa[x][y]='1';
+			    *l=x-1;
+			    *c=x+1;
+			}else if(mapa[x-1][y+1]=='H'){
+				v=Jogador->atacarHumano(chefe,chefeFinal.getVida(),chefeFinal.getStrength());
+				if (v==1){
+				*c1=*c1+1;
+                humanosVivos--;
+                chefeFinal.incrementarVida(100);
+                chefeFinal.decrementarStrength();
+			    mapa[x-1][y+1]='Z';
+			    }else if (v==0){
+			    cout << "Voce perdeu. Aperte qualquer botao para sair: ";
+				cin.get();
+			    exit(0);
+			    }
+		    }else if((mapa[x-1][y+1]=='A') || (mapa[x-1][y+1]=='C')){
+				Jogador->pegarItem(mapa[x-1][y+1]);
+				mapa[x-1][y+1]='1';
+			}else if (mapa[x-1][y+1]=='B'){
+				chefe=true;
+				v=Jogador->atacarHumano(chefe,chefeFinal.getVida(),chefeFinal.getStrength());
+				if (v==1)
+			    mapa[x+1][y-1]='Z';
+				else if (v==0){
+			    cout << "Voce perdeu. Aperte qualquer botao para sair: ";
+				cin.get();
+			    exit(0);
+                }								
+			}
+		    break;
+		default:
+			cout << "Posicao invalida.\n";
+			break;
+	}
     }
     
     Data dataAtual;
