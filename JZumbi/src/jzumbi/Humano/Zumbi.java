@@ -111,6 +111,8 @@ abstract class Zumbi extends Humano {
             return false;
         }
     }
+    
+    abstract int atacarHumano(boolean chefe, int vidaC, int strengthC);
 
     protected String nome;
     protected boolean capacete, armadura;
