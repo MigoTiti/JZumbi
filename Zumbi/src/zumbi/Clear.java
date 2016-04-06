@@ -1,4 +1,4 @@
-package jzumbi;
+package zumbi;
 
 import java.io.IOException;
 

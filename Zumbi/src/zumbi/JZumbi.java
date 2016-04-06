@@ -1,10 +1,10 @@
-package jzumbi;
+package zumbi;
 
 import javax.swing.JOptionPane;
-import jzumbi.Humano.Zumbi;
-import jzumbi.Humano.ZumbiCharger;
-import jzumbi.Humano.ZumbiHunter;
-import jzumbi.mapa.Mapa;
+import zumbi.Humano.Zumbi;
+import zumbi.Humano.ZumbiCharger;
+import zumbi.Humano.ZumbiHunter;
+import zumbi.mapa.Mapa;
 
 public class JZumbi {
 

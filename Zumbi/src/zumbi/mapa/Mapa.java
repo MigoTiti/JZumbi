@@ -1,14 +1,14 @@
-package jzumbi.mapa;
+package zumbi.mapa;
 
 import java.io.IOException;
 import java.util.Random;
 import javax.swing.JOptionPane;
-import jzumbi.Clear;
-import jzumbi.Data;
-import jzumbi.Humano.Chefe;
-import jzumbi.Humano.ZumbiCharger;
-import jzumbi.Humano.Zumbi;
-import jzumbi.Humano.ZumbiHunter;
+import zumbi.Clear;
+import zumbi.Data;
+import zumbi.Humano.Chefe;
+import zumbi.Humano.ZumbiCharger;
+import zumbi.Humano.Zumbi;
+import zumbi.Humano.ZumbiHunter;
 
 public class Mapa {
 
@@ -196,13 +196,11 @@ public class Mapa {
                 procurarMapa();
                 try {
                     d = (char) System.in.read();
-                } catch (IOException ex) {
-                }
+                } catch (IOException ex) {}
             } else {
                 try {
                     d = (char) System.in.read();
-                } catch (IOException ex) {
-                }
+                } catch (IOException ex) {}
             }
         } while (d != '0');
     }

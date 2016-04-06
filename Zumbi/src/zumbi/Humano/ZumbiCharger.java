@@ -1,8 +1,8 @@
-package jzumbi.Humano;
+package zumbi.Humano;
 
 import java.util.Random;
 import javax.swing.JOptionPane;
-import jzumbi.Clear;
+import zumbi.Clear;
 
 public class ZumbiCharger extends Zumbi {
     

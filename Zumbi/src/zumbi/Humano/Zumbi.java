@@ -1,7 +1,7 @@
-package jzumbi.Humano;
+package zumbi.Humano;
 
 import java.util.ArrayList;
-import jzumbi.Clear;
+import zumbi.Clear;
 
 public abstract class Zumbi extends Humano {
 

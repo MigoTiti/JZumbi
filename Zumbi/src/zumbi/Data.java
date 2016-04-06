@@ -1,4 +1,4 @@
-package jzumbi;
+package zumbi;
 
 import javax.swing.JOptionPane;
 

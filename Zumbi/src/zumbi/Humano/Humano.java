@@ -1,4 +1,4 @@
-package jzumbi.Humano;
+package zumbi.Humano;
 
 public abstract class Humano {
     
