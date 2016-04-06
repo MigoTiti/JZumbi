@@ -1,6 +1,7 @@
 package jzumbi;
 
 import javax.swing.JOptionPane;
+import jzumbi.Humano.Zumbi;
 import jzumbi.Humano.ZumbiCharger;
 import jzumbi.Humano.ZumbiHunter;
 import jzumbi.mapa.Mapa;
@@ -8,15 +9,20 @@ import jzumbi.mapa.Mapa;
 public class JZumbi {
 
     public static void main(String[] args) {
+       
         String nome = JOptionPane.showInputDialog("Digite o nome do zumbi: ");
-        Object jogador = new Object();
+        Zumbi jogador = null;
         
         String escolhaClasse = JOptionPane.showInputDialog("Escolha a classe do zumbi: \n1-Hunter; \n2-Charger.");
         
-        if(escolhaClasse.equals("1"))
-            jogador = new ZumbiHunter(nome,4000,200);
-        else if(escolhaClasse.equals("2"))
-            jogador = new ZumbiCharger(nome,6000,300);
+        switch (escolhaClasse) {
+            case "1":
+                jogador = new ZumbiHunter(nome,4000,200);
+                break;
+            case "2":
+                jogador = new ZumbiCharger(nome,6000,300);
+                break;
+        }
         
         Mapa m1 = new Mapa(jogador);
         
@@ -31,7 +37,15 @@ public class JZumbi {
     }
     
     private static void escolha(String op, Integer c, Object z1, Mapa m1){
+        char d;
+        Clear.clear();
         
+        switch(op){
+            case "1":
+                Clear.clear();
+                m1.exibirMapa();
+                int resultado = JOptionPane.showConfirmDialog(null,null, "Deseja retornar ao menu?",JOptionPane.OK_CANCEL_OPTION);
+        }
     }
     
     private static String menu(){

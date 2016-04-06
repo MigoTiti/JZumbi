@@ -1,6 +1,6 @@
 package jzumbi.Humano;
 
-abstract class Humano {
+public abstract class Humano {
     
     public Humano(int vida, int strength){
         if(vida>0)

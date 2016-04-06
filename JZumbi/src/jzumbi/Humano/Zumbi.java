@@ -1,10 +1,9 @@
 package jzumbi.Humano;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import jzumbi.Clear;
 
-abstract class Zumbi extends Humano {
+public abstract class Zumbi extends Humano {
 
     public Zumbi() {
         super(5000, 300);
@@ -70,6 +69,7 @@ abstract class Zumbi extends Humano {
         this.vida += valor;
     }
 
+    
     @Override
     public boolean equals(Object o) {
         if (o instanceof Zumbi) {
