@@ -1,7 +1,11 @@
 package zumbi.mapa;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
 import java.io.IOException;
 import java.util.Random;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import zumbi.Clear;
 import zumbi.Data;
@@ -10,7 +14,7 @@ import zumbi.Humano.ZumbiCharger;
 import zumbi.Humano.Zumbi;
 import zumbi.Humano.ZumbiHunter;
 
-public class Mapa {
+public class Mapa extends JFrame{
 
     public Mapa(Zumbi z1) {
         this.dataAtual = new Data(16, 02, 2016);
@@ -19,6 +23,17 @@ public class Mapa {
         this.mapa = new char[30][30];
     }
 
+    public void exibirMapa(){
+        this.setTitle("Zumbi");
+        this.setSize(600,600);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setVisible(true);
+        this.setLocationRelativeTo(null);
+        this.setBackground(Color.BLUE);
+        this.setResizable(false);
+        repaint();
+    }
+    
     public static void exibirHumanos() {
         Clear.clear();
         JOptionPane.showMessageDialog(null, humanosVivos + "estão vivos.");
@@ -30,6 +45,10 @@ public class Mapa {
 
     public void avancarDia() {
         dataAtual.incrementarDia();
+    }
+    
+    public char[][] getMapa(){
+        return this.mapa;
     }
 
     public void iniciarMapa() {
@@ -172,7 +191,7 @@ public class Mapa {
         do {
             Clear.clear();
             verificarMapa(d, c);
-            exibirMapa();
+            repaint();
             if ((c == HUMANOS) && (cfases == 1)) {
                 avancarDia();
                 cfases++;
@@ -203,34 +222,6 @@ public class Mapa {
                 } catch (IOException ex) {}
             }
         } while (d != '0');
-    }
-
-    public void exibirMapa() {
-        for (int i = 0; i <= 29; i++) {
-            for (int j = 0; j <= 29; j++) {
-                if (mapa[i][j] == 'Z') {
-                    //c.setColor(JavaHowTo.FOREGROUND_RED, JavaHowTo.BACKGROUND_BLACK);
-                    System.out.println(" " + mapa[i][j]);
-                } else if (mapa[i][j] == 'H' || mapa[i][j] == 'B') {
-                    //c.setColor(JavaHowTo.FOREGROUND_WHITE, JavaHowTo.BACKGROUND_BLACK);
-                    System.out.println(" " + mapa[i][j]);
-                } else if (mapa[i][j] == '0') {
-                    //c.setColor(JavaHowTo.FOREGROUND_GREEN, JavaHowTo.BACKGROUND_BLACK);
-                    System.out.println(" " + mapa[i][j]);
-                } else if (mapa[i][j] == 'A') {
-                    //c.setColor(JavaHowTo.FOREGROUND_BLUE, JavaHowTo.BACKGROUND_BLACK);
-                    System.out.println(" " + mapa[i][j]);
-                } else if (mapa[i][j] == 'C') {
-                   // c.setColor(JavaHowTo.FOREGROUND_BLUE, JavaHowTo.BACKGROUND_BLACK);
-                    System.out.println(" " + mapa[i][j]);
-                } else {
-                    //c.setColor(JavaHowTo.FOREGROUND_BLACK, JavaHowTo.BACKGROUND_BLACK);
-                    System.out.println(" " + mapa[i][j]);
-                }
-                //c.setColor(JavaHowTo.FOREGROUND_WHITE, JavaHowTo.BACKGROUND_BLACK);
-            }
-            System.out.println("\n");
-        }
     }
 
     private void procurarMapa() {
@@ -339,12 +330,49 @@ public class Mapa {
                 break;
         }
     }
+    
+    @Override
+    public void paint(Graphics g){
+        super.paintComponents(g);
+        boolean sucesso = false;
+        int varY = 20;
+        int varX = 20;
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 20, 600, 600);
+        g.setFont(new Font("Arial",Font.BOLD,20));
+        for(int i=0;i<30;i++){
+            for(int j=0;j<30;j++){
+                if (mapa[i][j] == 'Z') {
+                    g.setColor(Color.RED);
+                    g.drawString(String.valueOf(mapa[i][j]), varY, varX);
+                    sucesso = true;
+                } else if (mapa[i][j] == 'H' || mapa[i][j] == 'B') {
+                    g.setColor(Color.WHITE);
+                    g.drawString(String.valueOf(mapa[i][j]), varY, varX);
+                    sucesso = true;
+                } else if (mapa[i][j] == '0') {
+                    g.setColor(Color.GREEN);
+                    g.fillRect(varX+1, varY, 20, 20);
+                    sucesso = true;
+                } else if (mapa[i][j] == 'A' || mapa[i][j] == 'C') {
+                    g.setColor(Color.YELLOW);
+                    g.drawString(String.valueOf(mapa[i][j]), varY, varX);
+                    sucesso = true;
+                }
+                if(sucesso)
+                    varX+=20;
+            }
+            if(sucesso)
+                varY+=20;
+            varX = 0;
+        }
+    }
 
     private int xAtual, yAtual;
-    Data dataAtual;
-    Chefe chefeFinal;
-    Zumbi jogador;
+    private Data dataAtual;
+    private Chefe chefeFinal;
+    private Zumbi jogador;
     private char mapa[][];
     public static final int HUMANOS = 8;
-    static int humanosVivos = HUMANOS;
+    private static int humanosVivos = HUMANOS;
 }

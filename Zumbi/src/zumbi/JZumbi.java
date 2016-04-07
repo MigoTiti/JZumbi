@@ -1,5 +1,6 @@
 package zumbi;
 
+import java.awt.Graphics;
 import javax.swing.JOptionPane;
 import zumbi.Humano.Zumbi;
 import zumbi.Humano.ZumbiCharger;
@@ -9,7 +10,7 @@ import zumbi.mapa.Mapa;
 public class JZumbi {
 
     public static void main(String[] args) {
-       
+        
         String nome = JOptionPane.showInputDialog("Digite o nome do zumbi: ");
         Zumbi jogador = null;
         
