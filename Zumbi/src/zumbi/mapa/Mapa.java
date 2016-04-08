@@ -3,40 +3,80 @@ package zumbi.mapa;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.io.IOException;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Random;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import zumbi.Clear;
 import zumbi.Data;
 import zumbi.Humano.Chefe;
 import zumbi.Humano.ZumbiCharger;
 import zumbi.Humano.Zumbi;
 import zumbi.Humano.ZumbiHunter;
+import zumbi.JZumbi;
+import zumbi.Menu;
 
-public class Mapa extends JFrame{
+public class Mapa extends JFrame implements KeyListener{
 
     public Mapa(Zumbi z1) {
         this.dataAtual = new Data(16, 02, 2016);
         this.chefeFinal = new Chefe();
         this.jogador = z1;
         this.mapa = new char[30][30];
+        this.cFases = 1;
+        addKeyListener(this);
+        setFocusable(true);
+        setFocusTraversalKeysEnabled(false);
+        iniciarFrame();
     }
 
-    public void exibirMapa(){
+    private void iniciarFrame(){
+        
         this.setTitle("Zumbi");
-        this.setSize(600,600);
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setVisible(true);
-        this.setLocationRelativeTo(null);
-        this.setBackground(Color.BLUE);
+        this.setBackground(Color.GRAY);
         this.setResizable(false);
+        this.voltar = new JButton();
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMaximumSize(new java.awt.Dimension(600, 675));
+        setMinimumSize(new java.awt.Dimension(600, 675));
+        setPreferredSize(new java.awt.Dimension(600, 675));
+
+        voltar.setText("Voltar");
+        
+        voltar.addActionListener((java.awt.event.ActionEvent evt) -> {
+            new Menu(Mapa.this);
+            dispose();
+        });
+        this.setLocationRelativeTo(null);
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(voltar)
+                .addContainerGap(517, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(576, Short.MAX_VALUE)
+                .addComponent(voltar)
+                .addContainerGap())
+        );
+        
+        pack();
+    }
+    
+    public void exibirMapa(){
+        this.setVisible(true);
         repaint();
     }
     
     public static void exibirHumanos() {
-        Clear.clear();
-        JOptionPane.showMessageDialog(null, humanosVivos + "estão vivos.");
+        JOptionPane.showMessageDialog(null, humanosVivos + " humanos estão vivos.");
     }
 
     public void exibirDia() {
@@ -99,6 +139,7 @@ public class Mapa extends JFrame{
                 c = 0;
             }
         } while (c > 0);
+        procurarMapa();
     }
 
     private void iniciarMapa2() {
@@ -130,6 +171,7 @@ public class Mapa extends JFrame{
             }
         }
         humanosVivos = HUMANOS;
+        procurarMapa();
     }
 
     private void iniciarMapa3() {
@@ -181,47 +223,30 @@ public class Mapa extends JFrame{
             }
         }
         humanosVivos = HUMANOS;
+        procurarMapa();
     }
 
-    public void andarMapa(char d, Integer c) {
-        int cfases = 1;
+    public void andarMapa(char d) {
 
-        procurarMapa();
-
-        do {
-            Clear.clear();
-            verificarMapa(d, c);
-            repaint();
-            if ((c == HUMANOS) && (cfases == 1)) {
-                avancarDia();
-                cfases++;
-                iniciarMapa2();
-                if (jogador instanceof ZumbiHunter) {
-                    ZumbiHunter aux = new ZumbiHunter((ZumbiHunter) jogador);
-                    aux.incrementarVida(500);
-                    this.jogador = new ZumbiHunter(aux);
-                    Clear.clear();
-                    JOptionPane.showMessageDialog(null, "Hunter possui vantagem a noite, +500 de vida.");
-                }
-                procurarMapa();
-                try {
-                    d = (char) System.in.read();
-                } catch (IOException ex) {
-                }
-            } else if ((c == (HUMANOS * 2)) && (cfases == 2)) {
-                avancarDia();
-                cfases++;
-                iniciarMapa3();
-                procurarMapa();
-                try {
-                    d = (char) System.in.read();
-                } catch (IOException ex) {}
-            } else {
-                try {
-                    d = (char) System.in.read();
-                } catch (IOException ex) {}
+        verificarMapa(d);
+        repaint();
+        
+        int c = JZumbi.getC();
+        if ((c == HUMANOS) && (cFases == 1)) {
+            avancarDia();
+            cFases++;
+            iniciarMapa2();
+            if (jogador instanceof ZumbiHunter) {
+                ZumbiHunter aux = new ZumbiHunter((ZumbiHunter) jogador);
+                aux.incrementarVida(500);
+                this.jogador = new ZumbiHunter(aux);
+                JOptionPane.showMessageDialog(null, "Hunter possui vantagem a noite, +500 de vida.");
             }
-        } while (d != '0');
+        } else if ((JZumbi.getC() == (HUMANOS * 2)) && (cFases == 2)) {
+            avancarDia();
+            cFases++;
+            iniciarMapa3();
+        }
     }
 
     private void procurarMapa() {
@@ -250,7 +275,7 @@ public class Mapa extends JFrame{
             mapa[x][y] = '1';
             xAtual = x + xDirecao;
             yAtual = y + yDirecao;
-        } else if (mapa[x + 1][y + yDirecao] == 'H') {
+        } else if (mapa[x + xDirecao][y + yDirecao] == 'H') {
             if (hunter) {
                 ZumbiHunter aux = new ZumbiHunter((ZumbiHunter) jogador);
                 v = aux.atacarHumano(chefe, chefeFinal.getVida(), chefeFinal.getStrength());
@@ -260,15 +285,16 @@ public class Mapa extends JFrame{
             }
             if (v == 1) {
                 humanosVivos--;
+                JZumbi.setC();
                 mapa[x + xDirecao][y + yDirecao] = 'Z';
                 chefeFinal.incrementarVida(100);
                 chefeFinal.decrementarStrength();
             } else if (v == 0) {
-                JOptionPane.showMessageDialog(null, "Voce perdeu. Aperte qualquer botao para sair: ");
+                JOptionPane.showMessageDialog(null, "Voce perdeu.");
                 System.exit(0);
             }
-        } else if ((mapa[x + xDirecao][y + yDirecao] == 'A') || (mapa[x + 1][y + yDirecao] == 'C')) {
-            jogador.pegarItem(mapa[x + 1][y + yDirecao]);
+        } else if ((mapa[x + xDirecao][y + yDirecao] == 'A') || (mapa[x + xDirecao][y + yDirecao] == 'C')) {
+            jogador.pegarItem(mapa[x + xDirecao][y + yDirecao]);
             mapa[x + xDirecao][y + yDirecao] = '1';
         } else if (mapa[x + xDirecao][y + yDirecao] == 'B') {
             chefe = true;
@@ -290,7 +316,7 @@ public class Mapa extends JFrame{
         }
     }
 
-    private void verificarMapa(char d, Integer c1) {
+    private void verificarMapa(char d) {
 
         switch (d) {
             case '1':
@@ -325,10 +351,11 @@ public class Mapa extends JFrame{
             case '9':
                 andarAux(-1, 1, xAtual, yAtual);
                 break;
-            default:
-                JOptionPane.showMessageDialog(null, "Posição inválida.");
-                break;
         }
+    }
+    
+    public Zumbi getJogador(){
+        return this.jogador;
     }
     
     @Override
@@ -336,7 +363,7 @@ public class Mapa extends JFrame{
         super.paintComponents(g);
         boolean sucesso = false;
         int varY = 20;
-        int varX = 20;
+        int varX = 0;
         g.setColor(Color.BLACK);
         g.fillRect(0, 20, 600, 600);
         g.setFont(new Font("Arial",Font.BOLD,20));
@@ -344,11 +371,11 @@ public class Mapa extends JFrame{
             for(int j=0;j<30;j++){
                 if (mapa[i][j] == 'Z') {
                     g.setColor(Color.RED);
-                    g.drawString(String.valueOf(mapa[i][j]), varY, varX);
+                    g.fillRect(varX+1, varY, 20, 20);
                     sucesso = true;
                 } else if (mapa[i][j] == 'H' || mapa[i][j] == 'B') {
                     g.setColor(Color.WHITE);
-                    g.drawString(String.valueOf(mapa[i][j]), varY, varX);
+                    g.fillRect(varX+1, varY, 20, 20);
                     sucesso = true;
                 } else if (mapa[i][j] == '0') {
                     g.setColor(Color.GREEN);
@@ -356,7 +383,7 @@ public class Mapa extends JFrame{
                     sucesso = true;
                 } else if (mapa[i][j] == 'A' || mapa[i][j] == 'C') {
                     g.setColor(Color.YELLOW);
-                    g.drawString(String.valueOf(mapa[i][j]), varY, varX);
+                    g.fillRect(varX+1, varY, 20, 20);
                     sucesso = true;
                 }
                 if(sucesso)
@@ -368,11 +395,23 @@ public class Mapa extends JFrame{
         }
     }
 
-    private int xAtual, yAtual;
+    private JButton voltar;
+    private int xAtual, yAtual, cFases;
     private Data dataAtual;
     private Chefe chefeFinal;
     private Zumbi jogador;
     private char mapa[][];
     public static final int HUMANOS = 8;
     private static int humanosVivos = HUMANOS;
+
+    @Override
+    public void keyTyped(KeyEvent e) {}
+
+    @Override
+    public void keyPressed(KeyEvent e) {}
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        andarMapa(e.getKeyChar());
+    }
 }

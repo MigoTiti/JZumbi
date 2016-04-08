@@ -2,7 +2,6 @@ package zumbi.Humano;
 
 import java.util.Random;
 import javax.swing.JOptionPane;
-import zumbi.Clear;
 
 public class ZumbiHunter extends Zumbi{
     
@@ -36,10 +35,8 @@ public class ZumbiHunter extends Zumbi{
             nomeH = "Humano";
         
         do{
-            Clear.clear();
-            System.out.println("HP " + nomeH + ": " + vidaH + "    "
-            + "HP " + nome + ": " + vidaZ);
-            opt = JOptionPane.showInputDialog("\n1- Ataque normal;\n2- Mordida (custa pontos de vida);\n3- Fugir;");
+            opt = JOptionPane.showInputDialog("HP " + nomeH + ": " + vidaH + "    "
+            + "HP " + nome + ": " + vidaZ+"\n1- Ataque normal;\n2- Mordida (custa pontos de vida);\n3- Fugir;");
             switch(opt){
                 case "1":
                     maisMenos = gerador.nextInt(2);
@@ -51,7 +48,6 @@ public class ZumbiHunter extends Zumbi{
                         total = strengthZ - atk;
                         vidaH = vidaH - total;
                     }
-                    Clear.clear();
                     JOptionPane.showMessageDialog(null,nome + "usou Ataque normal, causando" + total + " de dano.");
                     break;
                 case "2":
@@ -67,11 +63,9 @@ public class ZumbiHunter extends Zumbi{
                         total = strengthZ - atk;
                         vidaH = vidaH - total;
                     }
-                    Clear.clear();
                     JOptionPane.showMessageDialog(null,nome + "usou Mordida, causando" + total + " de dano e recebendo 200 de dano colateral.");
                     break;
                 case "3":
-                    Clear.clear();
                     return 2;
             }
             maisMenos = gerador.nextInt(2);
@@ -90,10 +84,8 @@ public class ZumbiHunter extends Zumbi{
                     JOptionPane.showMessageDialog(null, nomeH + "usou Ataque normal, causando" + total + " de dano.");
         }while((vidaZ > 0) && (vidaH > 0));
         if(vidaZ == 0){
-            Clear.clear();
             return 0;
         }else{
-            Clear.clear();
             return 1;
         }
     }

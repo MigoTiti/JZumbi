@@ -1,7 +1,7 @@
 package zumbi.Humano;
 
 import java.util.ArrayList;
-import zumbi.Clear;
+import javax.swing.JOptionPane;
 
 public abstract class Zumbi extends Humano {
 
@@ -47,16 +47,14 @@ public abstract class Zumbi extends Humano {
 
         switch (item) {
             case 'C':
-                System.out.println("Voce pegou um capacete, +300 de vida.");
+                JOptionPane.showMessageDialog(null,"Voce pegou um capacete, +300 de vida.");
                 setC();
                 itemAtual = "capacete";
-                Clear.clear();
                 break;
             case 'A':
-                System.out.println("Voce pegou uma armadura, +500 de vida.");
+                JOptionPane.showMessageDialog(null,"Voce pegou uma armadura, +500 de vida.");
                 setA();
                 itemAtual = "armadura";
-                Clear.clear();
                 break;
         }
         

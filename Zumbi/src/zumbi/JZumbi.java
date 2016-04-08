@@ -1,6 +1,5 @@
 package zumbi;
 
-import java.awt.Graphics;
 import javax.swing.JOptionPane;
 import zumbi.Humano.Zumbi;
 import zumbi.Humano.ZumbiCharger;
@@ -13,47 +12,53 @@ public class JZumbi {
         
         String nome = JOptionPane.showInputDialog("Digite o nome do zumbi: ");
         Zumbi jogador = null;
+        boolean sucessoEscolha = false;
         
-        String escolhaClasse = JOptionPane.showInputDialog("Escolha a classe do zumbi: \n1-Hunter; \n2-Charger.");
+        do {
+            String escolhaClasse = JOptionPane.showInputDialog("Escolha a classe do zumbi: \n1-Hunter; \n2-Charger.");
+
+            if (escolhaClasse == null) {
+                System.exit(0);
+            }
+            
+            switch (escolhaClasse) {
+                case "1":
+                    jogador = new ZumbiHunter(nome,4000,200);
+                    break;
+                case "2":
+                    jogador = new ZumbiCharger(nome,6000,300);
+                    break;
+            }
+            
+            int numeroClasse = 0;
+            try {
+                numeroClasse = Integer.parseInt(escolhaClasse);
+                sucessoEscolha = true;
+            } catch (NumberFormatException e2) {
+                JOptionPane.showMessageDialog(null, "Sem letras ou símbolos!");
+            }
+            
+            if(sucessoEscolha&&(numeroClasse!=1&&numeroClasse!=2)){
+                JOptionPane.showMessageDialog(null, "Somente 1 e 2 são válidos!");
+            }
+                
+        } while (!sucessoEscolha);
         
-        switch (escolhaClasse) {
-            case "1":
-                jogador = new ZumbiHunter(nome,4000,200);
-                break;
-            case "2":
-                jogador = new ZumbiCharger(nome,6000,300);
-                break;
-        }
         
         Mapa m1 = new Mapa(jogador);
         
         m1.iniciarMapa();
         
-        Integer c = 0;
-        String op;
-        do{
-            op = menu();
-            escolha(op,c,jogador,m1);
-        }while(!"666".equals(op));
+        new Menu(m1);
     }
     
-    private static void escolha(String op, Integer c, Object z1, Mapa m1){
-        char d;
-        Clear.clear();
-        
-        switch(op){
-            case "1":
-                Clear.clear();
-                m1.exibirMapa();
-                int resultado = JOptionPane.showConfirmDialog(null,null, "Deseja retornar ao menu?",JOptionPane.OK_CANCEL_OPTION);
-        }
+    public static int getC(){
+        return JZumbi.c;
     }
     
-    private static String menu(){
-        Clear.clear();
-        String op;
-        op = JOptionPane.showInputDialog("Escolha uma opcao: \n\n1- Ver mapa;\n2- Andar;\n3- Exibir status;\n4- Exibir dia;\n5-Exibir o numero de sobreviventes;\n6-Sair.\n\n");
-        return op;
+    public static void setC(){
+        JZumbi.c++;
     }
     
+    private static int c = 0;
 }
