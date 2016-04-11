@@ -2,8 +2,9 @@ package zumbi.Humano;
 
 import java.util.Random;
 import javax.swing.JOptionPane;
+import zumbi.Atacar.Atacavel;
 
-public class ZumbiHunter extends Zumbi{
+public class ZumbiHunter extends Zumbi implements Atacavel{
     
     public ZumbiHunter(){
         super("Sem nome",2000,200);
@@ -21,7 +22,7 @@ public class ZumbiHunter extends Zumbi{
     }
     
     @Override
-    public int atacarHumano(boolean chefe, int vidaC, int strengthC){
+    public int atacar(boolean chefe, int vidaC, int strengthC){
         int vidaH = 4000, vidaZ = this.vida, strengthH = 200, strengthZ = this.strength, maisMenos, atk, total;
         String opt;
         String nomeH;
@@ -35,39 +36,50 @@ public class ZumbiHunter extends Zumbi{
             nomeH = "Humano";
         
         do{
-            opt = JOptionPane.showInputDialog("HP " + nomeH + ": " + vidaH + "    "
-            + "HP " + nome + ": " + vidaZ+"\n1- Ataque normal;\n2- Mordida (custa pontos de vida);\n3- Fugir;");
-            switch(opt){
-                case "1":
-                    maisMenos = gerador.nextInt(2);
-                    atk = gerador.nextInt(201);
-                    if(maisMenos==1){
-                        total = strengthZ + atk;
-                        vidaH = vidaH - total;
-                    }else{
-                        total = strengthZ - atk;
-                        vidaH = vidaH - total;
-                    }
-                    JOptionPane.showMessageDialog(null,nome + "usou Ataque normal, causando" + total + " de dano.");
-                    break;
-                case "2":
-                    vidaZ = vidaZ - 200;
-                    if(vidaZ < 0)
-                        vidaZ = 0;
-                    maisMenos = gerador.nextInt(2);
-                    atk = gerador.nextInt(201);
-                    if(maisMenos==1){
-                        total = strengthZ + atk + 100;
-                        vidaH = vidaH - total;
-                    }else{
-                        total = strengthZ - atk;
-                        vidaH = vidaH - total;
-                    }
-                    JOptionPane.showMessageDialog(null,nome + "usou Mordida, causando" + total + " de dano e recebendo 200 de dano colateral.");
-                    break;
-                case "3":
-                    return 2;
-            }
+            boolean sucesso = false;
+            do{
+                opt = JOptionPane.showInputDialog("HP " + nomeH + ": " + vidaH + "    "
+                + "HP " + nome + ": " + vidaZ+"\n1- Ataque normal;\n2- Ataque carregado (custa stamina);\n3- Fugir;");
+                if(opt == null)
+                    System.exit(0);
+                switch(opt){
+                    case "1":
+                        maisMenos = gerador.nextInt(2);
+                        atk = gerador.nextInt(201);
+                        if(maisMenos==1){
+                            total = strengthZ + atk;
+                            vidaH = vidaH - total;
+                        }else{
+                            total = strengthZ - atk;
+                            vidaH = vidaH - total;
+                        }
+                        JOptionPane.showMessageDialog(null,nome + "usou Ataque normal, causando" + total + " de dano.");
+                        sucesso = true;
+                        break;
+                    case "2":
+                        vidaZ = vidaZ - 200;
+                        if(vidaZ < 0)
+                            vidaZ = 0;
+                        maisMenos = gerador.nextInt(2);
+                        atk = gerador.nextInt(201);
+                        if(maisMenos==1){
+                            total = strengthZ + atk + 100;
+                            vidaH = vidaH - total;
+                        }else{
+                            total = strengthZ - atk;
+                            vidaH = vidaH - total;
+                        }
+                        JOptionPane.showMessageDialog(null,nome + "usou Mordida, causando" + total + " de dano e recebendo 200 de dano colateral.");
+                        sucesso = true;
+                        break;
+                    case "3":
+                        return 2;
+                    default:
+                        JOptionPane.showMessageDialog(null,"Escolha uma opção válida");
+                        break;
+                }
+            }while(!sucesso);
+            
             maisMenos = gerador.nextInt(2);
             atk = gerador.nextInt(101);
             if (maisMenos == 1){

@@ -278,10 +278,10 @@ public class Mapa extends JFrame implements KeyListener{
         } else if (mapa[x + xDirecao][y + yDirecao] == 'H') {
             if (hunter) {
                 ZumbiHunter aux = new ZumbiHunter((ZumbiHunter) jogador);
-                v = aux.atacarHumano(chefe, chefeFinal.getVida(), chefeFinal.getStrength());
+                v = aux.atacar(chefe, chefeFinal.getVida(), chefeFinal.getStrength());
             } else {
                 ZumbiCharger aux = new ZumbiCharger((ZumbiCharger) jogador);
-                v = aux.atacarHumano(chefe, chefeFinal.getVida(), chefeFinal.getStrength());
+                v = aux.atacar(chefe, chefeFinal.getVida(), chefeFinal.getStrength());
             }
             if (v == 1) {
                 humanosVivos--;
@@ -301,10 +301,10 @@ public class Mapa extends JFrame implements KeyListener{
 
             if (hunter) {
                 ZumbiHunter aux = new ZumbiHunter((ZumbiHunter) jogador);
-                v = aux.atacarHumano(chefe, chefeFinal.getVida(), chefeFinal.getStrength());
+                v = aux.atacar(chefe, chefeFinal.getVida(), chefeFinal.getStrength());
             } else {
                 ZumbiCharger aux = new ZumbiCharger((ZumbiCharger) jogador);
-                v = aux.atacarHumano(chefe, chefeFinal.getVida(), chefeFinal.getStrength());
+                v = aux.atacar(chefe, chefeFinal.getVida(), chefeFinal.getStrength());
             }
 
             if (v == 1) {

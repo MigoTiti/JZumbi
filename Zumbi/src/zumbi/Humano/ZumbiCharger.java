@@ -2,8 +2,9 @@ package zumbi.Humano;
 
 import java.util.Random;
 import javax.swing.JOptionPane;
+import zumbi.Atacar.Atacavel;
 
-public class ZumbiCharger extends Zumbi {
+public class ZumbiCharger extends Zumbi implements Atacavel{
     
     public ZumbiCharger(){
         super("Sem nome",2000,200);
@@ -21,7 +22,7 @@ public class ZumbiCharger extends Zumbi {
     }
     
     @Override
-    public int atacarHumano(boolean chefe, int vidaC, int strengthC){
+    public int atacar(boolean chefe, int vidaC, int strengthC){
         int staminaZ = this.stamina, vidaH = 4000, vidaZ = this.vida, strengthH = 200, strengthZ = this.strength, maisMenos, atk, total;
         String opt;
         String nomeH;
@@ -35,37 +36,48 @@ public class ZumbiCharger extends Zumbi {
             nomeH = "Humano";
         
         do{
-            opt = JOptionPane.showInputDialog("HP " + nomeH + ": " + vidaH + "    "
-            + "HP " + nome + ": " + vidaZ+"\n1- Ataque normal;\n2- Ataque carregado (custa stamina);\n3- Fugir;");
-            switch(opt){
-                case "1":
-                    maisMenos = gerador.nextInt(2);
-                    atk = gerador.nextInt(201);
-                    if(maisMenos==1){
-                        total = strengthZ + atk;
-                        vidaH = vidaH - total;
-                    }else{
-                        total = strengthZ - atk;
-                        vidaH = vidaH - total;
-                    }
-                    JOptionPane.showMessageDialog(null,nome + " usou Ataque normal, causando " + total + " de dano.");
-                    break;
-                case "2":
-                    staminaZ -= 10;
-                    maisMenos = gerador.nextInt(2);
-                    atk = gerador.nextInt(201);
-                    if(maisMenos==1){
-                        total = strengthZ + atk + 100;
-                        vidaH = vidaH - total;
-                    }else{
-                        total = strengthZ - atk;
-                        vidaH = vidaH - total;
-                    }
-                    JOptionPane.showMessageDialog(null,nome + " usou Ataque carregado, causando " + total + " de dano e gastando 10 de stamina.");
-                    break;
-                case "3":
-                    return 2;
-            }
+            boolean sucesso = false;
+            do{
+                opt = JOptionPane.showInputDialog("HP " + nomeH + ": " + vidaH + "    "
+                + "HP " + nome + ": " + vidaZ+"\n1- Ataque normal;\n2- Ataque carregado (custa stamina);\n3- Fugir;");
+                if(opt == null)
+                    System.exit(0);
+                switch(opt){
+                    case "1":
+                        maisMenos = gerador.nextInt(2);
+                        atk = gerador.nextInt(201);
+                        if(maisMenos==1){
+                            total = strengthZ + atk;
+                            vidaH = vidaH - total;
+                        }else{
+                            total = strengthZ - atk;
+                            vidaH = vidaH - total;
+                        }
+                        JOptionPane.showMessageDialog(null,nome + " usou Ataque normal, causando " + total + " de dano.");
+                        sucesso = true;
+                        break;
+                    case "2":
+                        staminaZ -= 10;
+                        maisMenos = gerador.nextInt(2);
+                        atk = gerador.nextInt(201);
+                        if(maisMenos==1){
+                            total = strengthZ + atk + 100;
+                            vidaH = vidaH - total;
+                        }else{
+                            total = strengthZ - atk;
+                            vidaH = vidaH - total;
+                        }
+                        JOptionPane.showMessageDialog(null,nome + " usou Ataque carregado, causando " + total + " de dano e gastando 10 de stamina.");
+                        sucesso = true;
+                        break;
+                    case "3":
+                        return 2;
+                    default:
+                        JOptionPane.showMessageDialog(null,"Escolha uma opção válida");
+                        break;
+                }
+            }while(!sucesso);
+            
             maisMenos = gerador.nextInt(2);
             atk = gerador.nextInt(101);
             if (maisMenos == 1){
@@ -79,13 +91,13 @@ public class ZumbiCharger extends Zumbi {
                 if (vidaZ < 0)
                     vidaZ = 0;
             }
-                    JOptionPane.showMessageDialog(null, nomeH + " usou Ataque normal, causando " + total + " de dano.");
+            JOptionPane.showMessageDialog(null, nomeH + " usou Ataque normal, causando " + total + " de dano.");
         }while((vidaZ > 0) && (vidaH > 0));
-        if(vidaZ == 0){
+        if(vidaZ == 0)
             return 0;
-        }else{
+        else
             return 1;
-        }
+        
     }
     
     @Override

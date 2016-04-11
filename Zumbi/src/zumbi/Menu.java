@@ -56,6 +56,11 @@ public class Menu extends JFrame {
         });
 
         sair.setText("Sair");
+        sair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sairActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -120,6 +125,10 @@ public class Menu extends JFrame {
     private void exibirSobreviventesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exibirSobreviventesActionPerformed
         Mapa.exibirHumanos();
     }//GEN-LAST:event_exibirSobreviventesActionPerformed
+
+    private void sairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sairActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_sairActionPerformed
    
     private Mapa m1;
 

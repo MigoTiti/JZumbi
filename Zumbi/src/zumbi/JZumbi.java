@@ -40,6 +40,7 @@ public class JZumbi {
             
             if(sucessoEscolha&&(numeroClasse!=1&&numeroClasse!=2)){
                 JOptionPane.showMessageDialog(null, "Somente 1 e 2 são válidos!");
+                sucessoEscolha = false;
             }
                 
         } while (!sucessoEscolha);
