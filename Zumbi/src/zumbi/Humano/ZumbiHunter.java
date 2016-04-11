@@ -103,6 +103,38 @@ public class ZumbiHunter extends Zumbi implements Atacavel{
     }
     
     @Override
+    public int golpe(String opcao, int strengthZ, int vidaH, int vidaZ){
+        int maisMenos, atk, total;
+        Random gerador = new Random();
+        if(opcao.equals("1")){
+            maisMenos = gerador.nextInt(2);
+            atk = gerador.nextInt(201);
+            if(maisMenos==1){
+                total = strengthZ + atk;
+                vidaH = vidaH - total;
+            }else{
+                total = strengthZ - atk;
+                vidaH = vidaH - total;
+            }
+            JOptionPane.showMessageDialog(null,nome + "usou Ataque normal, causando" + total + " de dano.");
+        }else
+            vidaZ = vidaZ - 200;
+            if(vidaZ < 0)
+                vidaZ = 0;
+            maisMenos = gerador.nextInt(2);
+            atk = gerador.nextInt(201);
+            if(maisMenos==1){
+                total = strengthZ + atk + 100;
+                vidaH = vidaH - total;
+            }else{
+                total = strengthZ - atk;
+                vidaH = vidaH - total;
+            }
+            JOptionPane.showMessageDialog(null,nome + "usou Mordida, causando" + total + " de dano e recebendo 200 de dano colateral.");
+        return vidaH;
+    }
+    
+    @Override
     public String toString(){
         String saida = "";
         saida += this.nome + "\nPontos de vida: "+
