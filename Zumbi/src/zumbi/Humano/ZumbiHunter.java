@@ -39,88 +39,65 @@ public class ZumbiHunter extends Zumbi implements Atacavel{
             boolean sucesso = false;
             do{
                 opt = JOptionPane.showInputDialog("HP " + nomeH + ": " + vidaH + "    "
-                + "HP " + nome + ": " + vidaZ+"\n1- Ataque normal;\n2- Ataque carregado (custa stamina);\n3- Fugir;");
+                + "HP " + nome + ": " + vidaZ+"\n1- Ataque normal;\n2- Pulo (custa vida);\n3- Fugir;");
                 if(opt == null)
                     System.exit(0);
                 switch(opt){
                     case "1":
-                        maisMenos = gerador.nextInt(2);
-                        atk = gerador.nextInt(201);
-                        if(maisMenos==1){
-                            total = strengthZ + atk;
-                            vidaH = vidaH - total;
-                        }else{
-                            total = strengthZ - atk;
-                            vidaH = vidaH - total;
-                        }
-                        JOptionPane.showMessageDialog(null,nome + "usou Ataque normal, causando" + total + " de dano.");
+                        if(!miss())
+                            vidaH = golpe(strengthZ,vidaH);
+                        else
+                            JOptionPane.showMessageDialog(null,"Não vai ter golpe.");
                         sucesso = true;
                         break;
                     case "2":
-                        vidaZ = vidaZ - 200;
-                        if(vidaZ < 0)
-                            vidaZ = 0;
-                        maisMenos = gerador.nextInt(2);
-                        atk = gerador.nextInt(201);
-                        if(maisMenos==1){
-                            total = strengthZ + atk + 100;
-                            vidaH = vidaH - total;
-                        }else{
-                            total = strengthZ - atk;
-                            vidaH = vidaH - total;
-                        }
-                        JOptionPane.showMessageDialog(null,nome + "usou Mordida, causando" + total + " de dano e recebendo 200 de dano colateral.");
+                        if(!miss()){
+                            int [] resultado = golpe(strengthZ,vidaH,vidaZ);
+                            vidaH = resultado[0];
+                            vidaZ = resultado[1];
+                        }else
+                            JOptionPane.showMessageDialog(null,"Não vai ter golpe.");
                         sucesso = true;
                         break;
                     case "3":
                         return 2;
                     default:
-                        JOptionPane.showMessageDialog(null,"Escolha uma opção válida");
+                        JOptionPane.showMessageDialog(null,"Escolha uma opção válida.");
                         break;
                 }
             }while(!sucesso);
-            
+            if(!miss()){
             maisMenos = gerador.nextInt(2);
-            atk = gerador.nextInt(101);
-            if (maisMenos == 1){
-                total = strengthH + atk;
-                vidaZ -= total;
-                if (vidaZ < 0)
-                    vidaZ=0;
-            }else{
-                total = strengthH - atk;
-                vidaZ -= total;
-                if (vidaZ < 0)
-                    vidaZ = 0;
-            }
-                    JOptionPane.showMessageDialog(null, nomeH + "usou Ataque normal, causando" + total + " de dano.");
+                atk = gerador.nextInt(101);
+                if (maisMenos == 1){
+                    total = strengthH + atk;
+                    vidaZ -= total;
+                    if (vidaZ < 0)
+                        vidaZ=0;
+                }else{
+                    total = strengthH - atk;
+                    vidaZ -= total;
+                    if (vidaZ < 0)
+                        vidaZ = 0;
+                }
+                JOptionPane.showMessageDialog(null, nomeH + " usou Ataque normal, causando " + total + " de dano.");
+            }else
+                JOptionPane.showMessageDialog(null,"Não vai ter golpe também.");
         }while((vidaZ > 0) && (vidaH > 0));
-        if(vidaZ == 0){
+        if(vidaZ == 0)
             return 0;
-        }else{
+        else
             return 1;
-        }
+        
     }
     
     @Override
-    public int golpe(String opcao, int strengthZ, int vidaH, int vidaZ){
+    public int[] golpe(int strengthZ, int vidaH, int fatorPerda){
         int maisMenos, atk, total;
         Random gerador = new Random();
-        if(opcao.equals("1")){
-            maisMenos = gerador.nextInt(2);
-            atk = gerador.nextInt(201);
-            if(maisMenos==1){
-                total = strengthZ + atk;
-                vidaH = vidaH - total;
-            }else{
-                total = strengthZ - atk;
-                vidaH = vidaH - total;
-            }
-            JOptionPane.showMessageDialog(null,nome + "usou Ataque normal, causando" + total + " de dano.");
-        }else
-            vidaZ = vidaZ - 200;
-            if(vidaZ < 0)
-                vidaZ = 0;
+            fatorPerda -= 200;
+            if(fatorPerda < 0)
+                fatorPerda = 0;
             maisMenos = gerador.nextInt(2);
             atk = gerador.nextInt(201);
             if(maisMenos==1){
@@ -130,8 +107,15 @@ public class ZumbiHunter extends Zumbi implements Atacavel{
                 total = strengthZ - atk;
                 vidaH = vidaH - total;
             }
-            JOptionPane.showMessageDialog(null,nome + "usou Mordida, causando" + total + " de dano e recebendo 200 de dano colateral.");
-        return vidaH;
+            JOptionPane.showMessageDialog(null,nome + " usou Pulo, causando " + total + " de dano e recebendo 200 de dano colateral.");
+            int[] resultado = new int[]{vidaH,fatorPerda};
+        return resultado;
+    }
+    
+    @Override
+    public boolean miss(){
+        int fator = new Random().nextInt(101);
+        return fator >= 90;
     }
     
     @Override

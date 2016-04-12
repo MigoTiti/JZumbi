@@ -1,9 +1,11 @@
 package zumbi.Humano;
 
 import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.JOptionPane;
+import zumbi.Atacar.Atacavel;
 
-public abstract class Zumbi extends Humano {
+public abstract class Zumbi extends Humano implements Atacavel{
 
     public Zumbi() {
         super(5000, 300);
@@ -67,6 +69,27 @@ public abstract class Zumbi extends Humano {
         this.vida += valor;
     }
 
+    @Override
+    public int golpe(int strengthZ, int vidaH){
+        int maisMenos, atk, total;
+        Random gerador = new Random();
+        maisMenos = gerador.nextInt(2);
+        atk = gerador.nextInt(201);
+        if(maisMenos==1){
+            total = strengthZ + atk;
+            vidaH = vidaH - total;
+        }else{
+            total = strengthZ - atk;
+            vidaH = vidaH - total;
+        }
+        JOptionPane.showMessageDialog(null,nome + "usou Ataque normal, causando" + total + " de dano.");
+        return vidaH;
+    }
+    
+    @Override
+    public boolean miss(){
+        return new Random().nextBoolean();
+    }
     
     @Override
     public boolean equals(Object o) {

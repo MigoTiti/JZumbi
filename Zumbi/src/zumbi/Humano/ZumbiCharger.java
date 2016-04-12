@@ -44,60 +44,83 @@ public class ZumbiCharger extends Zumbi implements Atacavel{
                     System.exit(0);
                 switch(opt){
                     case "1":
-                        maisMenos = gerador.nextInt(2);
-                        atk = gerador.nextInt(201);
-                        if(maisMenos==1){
-                            total = strengthZ + atk;
-                            vidaH = vidaH - total;
-                        }else{
-                            total = strengthZ - atk;
-                            vidaH = vidaH - total;
-                        }
-                        JOptionPane.showMessageDialog(null,nome + " usou Ataque normal, causando " + total + " de dano.");
+                        if(!miss())
+                            vidaH = golpe(strengthZ,vidaH);
+                        else
+                            JOptionPane.showMessageDialog(null,"Não vai ter golpe.");
                         sucesso = true;
                         break;
                     case "2":
-                        staminaZ -= 10;
-                        maisMenos = gerador.nextInt(2);
-                        atk = gerador.nextInt(201);
-                        if(maisMenos==1){
-                            total = strengthZ + atk + 100;
-                            vidaH = vidaH - total;
-                        }else{
-                            total = strengthZ - atk;
-                            vidaH = vidaH - total;
-                        }
-                        JOptionPane.showMessageDialog(null,nome + " usou Ataque carregado, causando " + total + " de dano e gastando 10 de stamina.");
+                        if(!miss()){
+                            if(staminaZ>0){
+                            int [] resultado = golpe(strengthZ,vidaH,vidaZ);
+                            vidaH = resultado[0];
+                            staminaZ = resultado[1];
+                            }else{
+                                JOptionPane.showMessageDialog(null,"Você não possui stamina suficiente.");
+                                vidaH = golpe(strengthZ,vidaH);
+                            }
+                        }else
+                            JOptionPane.showMessageDialog(null,"Não vai ter golpe.");
                         sucesso = true;
                         break;
                     case "3":
                         return 2;
                     default:
-                        JOptionPane.showMessageDialog(null,"Escolha uma opção válida");
+                        JOptionPane.showMessageDialog(null,"Escolha uma opção válida.");
                         break;
                 }
             }while(!sucesso);
-            
+            if(!miss()){
             maisMenos = gerador.nextInt(2);
-            atk = gerador.nextInt(101);
-            if (maisMenos == 1){
-                total = strengthH + atk;
-                vidaZ -= total;
-                if (vidaZ < 0)
-                    vidaZ=0;
-            }else{
-                total = strengthH - atk;
-                vidaZ -= total;
-                if (vidaZ < 0)
-                    vidaZ = 0;
-            }
-            JOptionPane.showMessageDialog(null, nomeH + " usou Ataque normal, causando " + total + " de dano.");
+                atk = gerador.nextInt(101);
+                if (maisMenos == 1){
+                    total = strengthH + atk;
+                    vidaZ -= total;
+                    if (vidaZ < 0)
+                        vidaZ=0;
+                }else{
+                    total = strengthH - atk;
+                    vidaZ -= total;
+                    if (vidaZ < 0)
+                        vidaZ = 0;
+                }
+                JOptionPane.showMessageDialog(null, nomeH + " usou Ataque normal, causando " + total + " de dano.");
+            }else
+                JOptionPane.showMessageDialog(null,"Não vai ter golpe também.");
         }while((vidaZ > 0) && (vidaH > 0));
         if(vidaZ == 0)
             return 0;
         else
             return 1;
         
+    }
+    
+    @Override
+    public int[] golpe(int strengthZ, int vidaH, int fatorPerda){
+        int maisMenos, atk, total;
+        Random gerador = new Random();
+            fatorPerda -= 20;
+            if(fatorPerda < 0)
+                fatorPerda = 0;
+            maisMenos = gerador.nextInt(2);
+            atk = gerador.nextInt(201);
+            if(maisMenos==1){
+                total = strengthZ + atk + 100;
+                vidaH = vidaH - total;
+            }else{
+                total = strengthZ - atk;
+                vidaH = vidaH - total;
+            }
+            JOptionPane.showMessageDialog(null,nome + " usou Ataque carregado, causando " + total + " de dano e perdendo 20 de stamina.");
+            int[] resultado = new int[]{vidaH,fatorPerda};
+        return resultado;
+    }
+    
+    @Override
+    public boolean miss(){
+        int fator = new Random().nextInt(101);
+        return fator >= 60;
     }
     
     @Override
