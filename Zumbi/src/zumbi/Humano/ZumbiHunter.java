@@ -4,7 +4,7 @@ import java.util.Random;
 import javax.swing.JOptionPane;
 import zumbi.Atacar.Atacavel;
 
-public class ZumbiHunter extends Zumbi implements Atacavel{
+public class ZumbiHunter extends Zumbi {
     
     public ZumbiHunter(){
         super("Sem nome",2000,200);
