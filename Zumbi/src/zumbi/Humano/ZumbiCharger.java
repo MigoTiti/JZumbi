@@ -52,8 +52,8 @@ public class ZumbiCharger extends Zumbi implements Atacavel{
                         break;
                     case "2":
                         if(!miss()){
-                            if(staminaZ>0){
-                            int [] resultado = golpe(strengthZ,vidaH,vidaZ);
+                            if(staminaZ>=20){
+                            int [] resultado = golpe(strengthZ,vidaH,staminaZ);
                             vidaH = resultado[0];
                             staminaZ = resultado[1];
                             }else{
@@ -100,27 +100,24 @@ public class ZumbiCharger extends Zumbi implements Atacavel{
     public int[] golpe(int strengthZ, int vidaH, int fatorPerda){
         int maisMenos, atk, total;
         Random gerador = new Random();
-            fatorPerda -= 20;
-            if(fatorPerda < 0)
-                fatorPerda = 0;
-            maisMenos = gerador.nextInt(2);
-            atk = gerador.nextInt(201);
-            if(maisMenos==1){
-                total = strengthZ + atk + 100;
-                vidaH = vidaH - total;
-            }else{
-                total = strengthZ - atk;
-                vidaH = vidaH - total;
-            }
-            JOptionPane.showMessageDialog(null,nome + " usou Ataque carregado, causando " + total + " de dano e perdendo 20 de stamina.");
-            int[] resultado = new int[]{vidaH,fatorPerda};
+        fatorPerda -= 20;
+        maisMenos = gerador.nextInt(2);
+        atk = gerador.nextInt(201);
+        if(maisMenos==1){
+            total = strengthZ + atk + 100;
+            vidaH -= total;
+        }else{
+            total = strengthZ - atk + 100;
+            vidaH -= total;
+        }
+        JOptionPane.showMessageDialog(null,nome + " usou Ataque carregado, causando " + total + " de dano e perdendo 20 de stamina.");
+        int[] resultado = new int[]{vidaH,fatorPerda};
         return resultado;
     }
     
     @Override
     public boolean miss(){
-        int fator = new Random().nextInt(101);
-        return fator >= 60;
+        return new Random().nextInt(101) >= 60;
     }
     
     @Override
